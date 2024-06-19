@@ -313,7 +313,7 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
         └─label
     ```
 
-### checkpoint
+### Checkpoint
 
 
 ## Training

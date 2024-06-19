@@ -323,6 +323,12 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
 ## Inference
 
 
+## Acknowledgement
+This repository is built upon [DINOv2](https://github.com/facebookresearch/dinov2) and [A2Net](https://github.com/guanyuezhen/A2Net). Thanks for those well-organized codebases.
+
+
+
+
 ## Citation
 ```bibtex
 @article{zhu2024changevit,

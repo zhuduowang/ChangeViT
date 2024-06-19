@@ -22,7 +22,7 @@ Figure 1. Overview of the proposed $\textbf{ChangeViT}$. bi-temporal images $I_{
 ## Performance
 <table>
     <caption>
-Performance comparison of different change detection methods on LEVIR-CD, WHU-CD, and CLCD datasets, respectively. The best results are highlighted in <span class="bold">bold</span> and the second best results are <span class="underline">underlined</span>. All results of the three evaluation metrics are described as percentages (%).
+Table 1. Performance comparison of different change detection methods on LEVIR-CD, WHU-CD, and CLCD datasets, respectively. The best results are highlighted in <span class="bold">bold</span> and the second best results are <span class="underline">underlined</span>. All results of the three evaluation metrics are described as percentages (%).
     </caption>
     <thead>
         <tr>
@@ -203,6 +203,92 @@ Performance comparison of different change detection methods on LEVIR-CD, WHU-CD
     </tbody>
 </table>
 
+<div style="center">
+<table>
+    <caption>
+    Table 2. Performance comparison of different change detection methods on the OSCD dataset. The best results are highlighted in <b>bold</b> and the second best results are <u>underlined</u>. All results of the three evaluation metrics are described as percentages (%).</caption>
+    <thead>
+        <tr>
+            <th rowspan="2">Method</th>
+            <th colspan="3">OSCD</th>
+        </tr>
+        <tr>
+            <th>F1</th>
+            <th>IoU</th>
+            <th>OA</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>DTCDSCN</th>
+            <th>$36.13$</th>
+            <th>$22.05$</th>
+            <th>$94.50$</th>
+        </tr>
+        <tr>
+            <th>SNUNet</th>
+            <th>$27.02$</th>
+            <th>$15.62$</th>
+            <th>$93.81$</th>
+        </tr>
+        <tr>
+            <th>ChangeFormer</th>
+            <th>$38.22$</th>
+            <th>$23.62$</th>
+            <th>$94.53$</th>
+        </tr>
+        <tr>
+            <th>BIT</th>
+            <th>$29.58$</th>
+            <th>$17.36$</th>
+            <th>$90.15$</th>
+        </tr>
+        <tr>
+            <th>ICIFNet</th>
+            <th>$23.03$</th>
+            <th>$13.02$</th>
+            <th>$94.61$</th>
+        </tr>
+        <tr>
+            <th>DMINet</th>
+            <th>$42.23$</th>
+            <th>$26.76$</th>
+            <th>$95.00$</th>
+        </tr>
+        <tr>
+            <th>GASNet</th>
+            <th>$10.71$</th>
+            <th>$5.66$</th>
+            <th>$91.52$</th>
+        </tr>
+        <tr>
+            <th>AMTNet</th>
+            <th>$10.25$</th>
+            <th>$5.40$</th>
+            <th>$94.29$</th>
+        </tr>
+        <tr>
+            <th>EATDer</th>
+            <th>$54.23$</th>
+            <th>$36.98$</th>
+            <th>$93.85$</th>
+        </tr>
+        <tr>
+            <th>ChangeViT-T (Ours)</th>
+            <th>$\underline{55.13}$</th>
+            <th>$\underline{38.06}$</th>
+            <th>$\underline{95.01}$</th>
+        </tr>
+        <tr>
+            <th>ChangeViT-S (Ours)</th>
+            <th>$\textbf{55.51}$</th>
+            <th>$\textbf{38.42}$</th>
+            <th>$\textbf{95.05}$</th>
+        </tr>
+    </tbody>
+</table>
+</div>
+
 
 ## Usage
 
@@ -227,7 +313,7 @@ Performance comparison of different change detection methods on LEVIR-CD, WHU-CD
         └─label
     ```
 
-### Download checkpoint
+### checkpoint
 
 
 ## Training

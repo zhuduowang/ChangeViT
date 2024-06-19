@@ -12,660 +12,197 @@ Codes and models for ***[ChangeViT: Unleashing Plain Vision Transformers for Cha
 In this paper, our study uncovers ViTs' unique advantage in discerning large-scale changes, a capability where CNNs fall short. Capitalizing on this insight, we introduce ChangeViT, a framework that adopts a plain ViT backbone to enhance the performance of large-scale changes. This framework is supplemented by a detail-capture module that generates detailed spatial features and a feature injector that efficiently integrates fine-grained spatial information into high-level semantic learning. The feature integration ensures that ChangeViT excels in both detecting large-scale changes and capturing fine-grained details, providing comprehensive change detection across diverse scales. Without bells and whistles, ChangeViT achieves state-of-the-art performance on three popular high-resolution datasets (i.e., LEVIR-CD, WHU-CD, and CLCD) and one low-resolution dataset (i.e., OSCD), which underscores the unleashed potential of plain ViTs for change detection. Furthermore, thorough quantitative and qualitative analyses validate the efficacy of the introduced modules, solidifying the effectiveness of our approach.
 
 ## Framework
+<p align="center">
+    <img width=800 src="figures/framework.png"/> <br />
+</p>
+
+Figure 1. Overview of the proposed $\textbf{ChangeViT}$. bi-temporal images $I_{1}$ and $I_{2}$ are firstly fed into shared ViT to extract high-level semantic features and detail-capture module to extract low-level detailed information. Subsequently, a feature injector is introduced to inject the low-level details into high-level features. Finally, a decoder is utilized to predict changed probability maps.
+
 
 ## Performance
-
-<table style="border-collapse: collapse; border: none; border-spacing: 0px;">
-	<caption>
-		Table 1. Performance comparison of different change detection methods on LEVIR-CD, WHU-CD, and CLCD datasets, respectively. The best results are highlighted in <b>bold</b> and the second best results are <u>underlined</u>. All results of the three evaluation metrics are described as percentages (%).
-	</caption>
-	<tr>
-		<td rowspan="2" style="border-right: 1px solid black; border-top: 2px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			Method
-		</td>
-		<td rowspan="2" style="border-right: 1px solid black; border-top: 2px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			#Params(M)
-		</td>
-		<td rowspan="2" style="border-right: 1px solid black; border-top: 2px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			FLOPs(G)
-		</td>
-		<td colspan="3" style="border-right: 1px solid black; border-top: 2px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			LEVIR-CD
-		</td>
-		<td colspan="3" style="border-right: 1px solid black; border-top: 2px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			WHU-CD
-		</td>
-		<td colspan="3" style="border-top: 2px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			CLCD
-		</td>
-	</tr>
-	<tr>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			F1
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			IoU
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			OA
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			F1
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			IoU
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			OA
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			F1
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			IoU
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			OA
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			DTCDSCN
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			41.07
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			20.44
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			87.43
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			77.67
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.75
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			79.92
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			66.56
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.05
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			57.47
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			40.81
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.59
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			SNUNet
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			12.04
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			54.82
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			88.16
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			78.83
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.82
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			83.22
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			71.26
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.44
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			60.82
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			43.63
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.90
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			ChangeFormer
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			41.03
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			202.79
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			90.40
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			82.48
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			99.04
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			87.39
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			77.61
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			99.11
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			61.31
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			44.29
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.98
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			BIT
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>3.55</b>
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>10.63</b>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			89.31
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			80.68
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.92
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			83.98
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			72.39
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.52
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			59.93
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			42.12
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.77
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			ICIFNet
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			23.82
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			25.36
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			89.96
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			81.75
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.99
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			88.32
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			79.24
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.96
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			68.66
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			52.27
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			95.77
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			DMINet
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>6.24</u>
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>14.42</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			90.71
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			82.99
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			99.07
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			88.69
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			79.68
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.97
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			67.24
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			50.65
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			95.21
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			GASNet
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			23.59
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			23.52
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			90.52
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			83.48
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			99.07
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			91.75
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			84.76
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			99.34
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			63.84
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			46.89
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.01
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			AMTNet
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			24.67
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			21.56
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			90.76
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			83.08
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.96
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			92.27
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			85.64
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			99.32
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			75.10
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			60.13
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			96.45
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			EATDer
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			6.61
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			23.43
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			91.20
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			83.80
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.75
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			90.01
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			81.97
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			98.58
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			72.01
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			56.19
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			96.11
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>ChangeViT-T</b>
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			11.68
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			27.15
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>91.81</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>84.86</u>
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>99.17</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>94.53</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>89.63</u>
-		</td>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>99.57</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>77.31</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>63.01</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>96.67</u>
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>ChangeViT-S</b>
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			32.13
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			38.80
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>91.98</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>85.16</b>
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>99.19</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>94.84</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>90.18</b>
-		</td>
-		<td style="border-right: 1px solid black; border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>99.59</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>77.57</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>63.36</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>96.79</b>
-		</td>
-	</tr>
+<table>
+    <caption>
+Performance comparison of different change detection methods on LEVIR-CD, WHU-CD, and CLCD datasets, respectively. The best results are highlighted in <span class="bold">bold</span> and the second best results are <span class="underline">underlined</span>. All results of the three evaluation metrics are described as percentages (%).
+    </caption>
+    <thead>
+        <tr>
+            <th rowspan="2">Method</th>
+            <th rowspan="2">#Params(M)</th>
+            <th rowspan="2">FLOPs(G)</th>
+            <th colspan="3">LEVIR-CD</th>
+            <th colspan="3">WHU-CD</th>
+            <th colspan="3">CLCD</th>
+        </tr>
+        <tr>
+            <th>F1</th>
+            <th>IoU</th>
+            <th>OA</th>
+            <th>F1</th>
+            <th>IoU</th>
+            <th>OA</th>
+            <th>F1</th>
+            <th>IoU</th>
+            <th>OA</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>DTCDSCN</th>
+            <th>$41.07$</th>
+            <th>$20.44$</th>
+            <th>$87.43$</th>
+            <th>$77.67$</th>
+            <th>$98.75$</th>
+            <th>$79.92$</th>
+            <th>$66.56$</th>
+            <th>$98.05$</th>
+            <th>$57.47$</th>
+            <th>$40.81$</th>
+            <th>$94.59$</th>
+        </tr>
+        <tr>
+            <th>SNUNet</th>
+            <th>$12.04$</th>
+            <th>$54.82$</th>
+            <th>$88.16$</th>
+            <th>$78.83$</th>
+            <th>$98.82$</th>
+            <th>$83.22$</th>
+            <th>$71.26$</th>
+            <th>$98.44$</th>
+            <th>$60.82$</th>
+            <th>$43.63$</th>
+            <th>$94.90$</th>
+        </tr>
+        <tr>
+            <th>ChangeFormer</th>
+            <th>$41.03$</th>
+            <th>$202.79$</th>
+            <th>$90.40$</th>
+            <th>$82.48$</th>
+            <th>$99.04$</th>
+            <th>$87.39$</th>
+            <th>$77.61$</th>
+            <th>$99.11$</th>
+            <th>$61.31$</th>
+            <th>$44.29$</th>
+            <th>$94.98$</th>
+        </tr>
+        <tr>
+            <th>BIT</th>
+            <th>$\textbf{3.55}$</th>
+            <th>$\textbf{10.63}$</th>
+            <th>$89.31$</th>
+            <th>$80.68$</th>
+            <th>$98.92$</th>
+            <th>$83.98$</th>
+            <th>$72.39$</th>
+            <th>$98.52$</th>
+            <th>$59.93$</th>
+            <th>$42.12$</th>
+            <th>$94.77$</th>
+        </tr>
+        <tr>
+            <th>ICIFNet</th>
+            <th>$23.82$</th>
+            <th>$25.36$</th>
+            <th>$89.96$</th>
+            <th>$81.75$</th>
+            <th>$98.99$</th>
+            <th>$88.32$</th>
+            <th>$79.24$</th>
+            <th>$98.96$</th>
+            <th>$68.66$</th>
+            <th>$52.27$</th>
+            <th>$95.77$</th>
+        </tr>
+        <tr>
+            <th>DMINet</th>
+            <th>$\underline{6.24}$</th>
+            <th>$\underline{14.42}$</th>
+            <th>$90.71$</th>
+            <th>$82.99$</th>
+            <th>$99.07$</th>
+            <th>$88.69$</th>
+            <th>$79.68$</th>
+            <th>$98.97$</th>
+            <th>$67.24$</th>
+            <th>$50.65$</th>
+            <th>$95.21$</th>
+        </tr>
+        <tr>
+            <th>GASNet</th>
+            <th>$23.59$</th>
+            <th>$23.52$</th>
+            <th>$90.52$</th>
+            <th>$83.48$</th>
+            <th>$99.07$</th>
+            <th>$91.75$</th>
+            <th>$84.76$</th>
+            <th>$99.34$</th>
+            <th>$63.84$</th>
+            <th>$46.89$</th>
+            <th>$94.01$</th>
+        </tr>
+        <tr>
+            <th>AMTNet</th>
+            <th>$24.67$</th>
+            <th>$21.56$</th>
+            <th>$90.76$</th>
+            <th>$83.08$</th>
+            <th>$98.96$</th>
+            <th>$92.27$</th>
+            <th>$85.64$</th>
+            <th>$99.32$</th>
+            <th>$75.10$</th>
+            <th>$60.13$</th>
+            <th>$96.45$</th>
+        </tr>
+        <tr>
+            <th>EATDer</th>
+            <th>$6.61$</th>
+            <th>$23.43$</th>
+            <th>$91.20$</th>
+            <th>$83.80$</th>
+            <th>$98.75$</th>
+            <th>$90.01$</th>
+            <th>$81.97$</th>
+            <th>$98.58$</th>
+            <th>$72.01$</th>
+            <th>$56.19$</th>
+            <th>$96.11$</th>
+        </tr>
+        <tr>
+            <th>ChangeViT-T (Ours)</th>
+            <th>$11.68$</th>
+            <th>$27.15$</th>
+            <th>$\underline{91.81}$</th>
+            <th>$\underline{84.86}$</th>
+            <th>$\underline{99.17}$</th>
+            <th>$\underline{94.53}$</th>
+            <th>$\underline{89.63}$</th>
+            <th>$\underline{99.57}$</th>
+            <th>$\underline{77.31}$</th>
+            <th>$\underline{63.01}$</th>
+            <th>$\underline{96.67}$</th>
+        </tr>
+        <tr>
+            <th>ChangeViT-S (Ours)</th>
+            <th>$32.13$</th>
+            <th>$38.80$</th>
+            <th>$\textbf{91.98}$</th>
+            <th>$\textbf{85.16}$</th>
+            <th>$\textbf{99.19}$</th>
+            <th>$\textbf{94.84}$</th>
+            <th>$\textbf{90.18}$</th>
+            <th>$\textbf{99.59}$</th>
+            <th>$\textbf{77.57}$</th>
+            <th>$\textbf{63.36}$</th>
+            <th>$\textbf{96.79}$</th>
+        </tr>
+    </tbody>
 </table>
 
-<table style="border-collapse: collapse; border: none; border-spacing: 0px;">
-	<caption>
-		Table 2. Performance comparison of different change detection methods on the OSCD dataset. The best results are highlighted in <b>bold</b> and the second best results are <u>underlined</u>. All results of the three evaluation metrics are described as percentages (%).
-	</caption>
-	<tr>
-		<td rowspan="2" style="border-right: 1px solid black; border-top: 2px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			Method
-		</td>
-		<td colspan="3" style="border-top: 2px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			OSCD
-		</td>
-	</tr>
-	<tr>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			F1
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			IoU
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			OA
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			DTCDSCN
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			36.13
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			22.05
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.50
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			SNUNet
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			27.02
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			15.62
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			93.81
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			ChangeFormer
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			38.22
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			23.62
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.53
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			BIT
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			29.58
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			17.36
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			90.15
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			ICIFNet
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			23.03
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			13.02
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.61
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			DMINet
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			42.23
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			26.76
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			95.00
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			GASNet
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			10.71
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			5.66
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			91.52
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			AMTNet
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			10.25
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			5.40
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			94.29
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			EATDer
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			54.23
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			36.98
-		</td>
-		<td style="border-bottom: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			93.85
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>ChangeViT-T</b>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>55.13</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>38.06</u>
-		</td>
-		<td style="text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<u>95.01</u>
-		</td>
-	</tr>
-	<tr>
-		<td style="border-right: 1px solid black; border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>ChangeViT-S</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>55.51</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>38.42</b>
-		</td>
-		<td style="border-bottom: 2px solid black; text-align: center; padding-right: 3pt; padding-left: 3pt;">
-			<b>95.05</b>
-		</td>
-	</tr>
-</table>
 
 ## Usage
 

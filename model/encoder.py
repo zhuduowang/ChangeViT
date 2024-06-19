@@ -343,7 +343,7 @@ class Encoder(nn.Module):
             path = "path to vit-small preweights"
             
         else:
-            assert False, r'check the vit mdoel type'
+            assert False, r'check the vit model type'
 
         state_dict = torch.load(path, map_location='cpu')
 
@@ -353,7 +353,7 @@ class Encoder(nn.Module):
         msg = self.vit.load_state_dict(state_dict, strict=False)
         print(' missing_keys:{},\n unexpected_keys:{}'.format(msg.missing_keys, msg.unexpected_keys))
 
-        self.resnet = resnet18(pretrained=True)
+        self.detail_capture = resnet18(pretrained=True)
 
         print('model_type: {},\n checkpoint_path: {}'.format(model_type, path))
 
@@ -364,7 +364,7 @@ class Encoder(nn.Module):
         g_x = rearrange(g_x, 'b (h w) c -> b c h w', h=16, w=16)
         g_y = rearrange(g_y, 'b (h w) c -> b c h w', h=16, w=16)
 
-        l_x = self.resnet(x)
-        l_y = self.resnet(y)
+        l_x = self.detail_capture(x)
+        l_y = self.detail_capture(y)
 
         return l_x + [g_x], l_y + [g_y]

@@ -315,18 +315,20 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
     ```
 
 ### Checkpoint
-
+TODO
 
 ## Training
-
+TODO
 
 ## Inference
+TODO
+
+## License
+ChangeViT is released under the [CC BY-NC-SA 4.0 license](LICENSE).
 
 
 ## Acknowledgement
 This repository is built upon [DINOv2](https://github.com/facebookresearch/dinov2) and [A2Net](https://github.com/guanyuezhen/A2Net). Thanks for those well-organized codebases.
-
-
 
 
 ## Citation

@@ -315,7 +315,9 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
     ```
 
 ### Checkpoint
-TODO
+- Download the pre-weights [ViT-T](https://dl.fbaipublicfiles.com/deit/deit_tiny_patch16_224-a1311bcf.pth), and [ViT-S](https://dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth), then put them into checkpoint folder.
+
+- Pre-trained models will come soon.
 
 ## Training
 TODO
@@ -335,7 +337,7 @@ This repository is built upon [DINOv2](https://github.com/facebookresearch/dinov
 ```bibtex
 @article{zhu2024changevit,
   title={ChangeViT: Unleashing Plain Vision Transformers for Change Detection},
-  author={Duowang Zhu, Xiaohu Huang, Haiyan Huang, Zhenfeng Shao, and Qimin Cheng},
+  author={Zhu, Duowang and Huang, Xiaohu and Huang, Haiyan and Shao, Zhenfeng and Cheng, Qimin},
   journal={arXiv preprint arXiv:2406.12847},
   year={2024}
 }

@@ -6,8 +6,9 @@ Codes and models for ***[ChangeViT: Unleashing Plain Vision Transformers for Cha
 [[paper]](https://arxiv.org/pdf/2406.12847)
 
 ## Update
-- [2024/6/18] The training code will be publicly available at about 2024/7/5.
+- [2024/6/18] The training code will be publicly available at about ~~2024/7/5~~.
 - [2024/6/19] The core component of this paper has been released, including [detail-capture](model/encoder.py), and [feature injector](model/decoder.py).
+- [2024/6/24] All the code has been released, including training and inference. 😊
 
 ## Abstract
 In this paper, our study uncovers ViTs' unique advantage in discerning large-scale changes, a capability where CNNs fall short. Capitalizing on this insight, we introduce ChangeViT, a framework that adopts a plain ViT backbone to enhance the performance of large-scale changes. This framework is supplemented by a detail-capture module that generates detailed spatial features and a feature injector that efficiently integrates fine-grained spatial information into high-level semantic learning. The feature integration ensures that ChangeViT excels in both detecting large-scale changes and capturing fine-grained details, providing comprehensive change detection across diverse scales. Without bells and whistles, ChangeViT achieves state-of-the-art performance on three popular high-resolution datasets (i.e., LEVIR-CD, WHU-CD, and CLCD) and one low-resolution dataset (i.e., OSCD), which underscores the unleashed potential of plain ViTs for change detection. Furthermore, thorough quantitative and qualitative analyses validate the efficacy of the introduced modules, solidifying the effectiveness of our approach.
@@ -294,11 +295,11 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
 ## Usage
 
 ### Data Preparation
-- Download the [LEVIR-CD](https://chenhao.in/LEVIR/), [WHU-CD](http://gpcv.whu.edu.cn/data/building_dataset.html), [CLCD](https://github.com/liumency/CropLand-CD), and [OSCD](https://rcdaudt.github.io/oscd/) datasets.
+- Download the [LEVIR-CD](https://chenhao.in/LEVIR/), [WHU-CD](http://gpcv.whu.edu.cn/data/building_dataset.html), [CLCD](https://github.com/liumency/CropLand-CD), and [OSCD](https://rcdaudt.github.io/oscd/) datasets. (The preprocessed WHU-CD dataset can be downloaded from [here](https://www.dropbox.com/scl/fi/8gczkg78fh95yofq5bs7p/WHU.zip?rlkey=05bpczx0gdp99hl6o2xr1zvyj&dl=0))
 
 - Crop each image in the dataset into 256x256 patches.
 
-- Prepare the dataset into the following structure and set its path in the configuration file.
+- Prepare the dataset into the following structure and set its path in the [config](https://github.com/zhuduowang/ChangeViT/blob/5e08b4b2bdc94de282588562b85bb4bb6e0cd610/main.py#L146) file.
     ```
     ├─Train
         ├─A          jpg/png
@@ -315,15 +316,18 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
     ```
 
 ### Checkpoint
-- Download the pre-weights [ViT-T](https://dl.fbaipublicfiles.com/deit/deit_tiny_patch16_224-a1311bcf.pth), and [ViT-S](https://dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth), then put them into checkpoint folder.
+- Download the pre-weights [ViT-T](https://dl.fbaipublicfiles.com/deit/deit_tiny_patch16_224-a1311bcf.pth), and [ViT-S](https://dl.fbaipublicfiles.com/dinov2/dinov2_vits14/dinov2_vits14_pretrain.pth), then put them into checkpoints folder.
 
 - Pre-trained models will come soon.
 
+## Dependency
+pip install -r requirements.txt
+
 ## Training
-TODO
+python main.py --file_root LEVIR --max_steps 80000 --model_type small --batch_size 16 --lr 2e-4 --gpu_id 0
 
 ## Inference
-TODO
+python eval.py --file_root LEVIR --max_steps 80000 --model_type small --batch_size 16 --lr 2e-4 --gpu_id 0
 
 ## License
 ChangeViT is released under the [CC BY-NC-SA 4.0 license](LICENSE).

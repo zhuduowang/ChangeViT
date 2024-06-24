@@ -295,7 +295,7 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
 ## Usage
 
 ### Data Preparation
-- Download the [LEVIR-CD](https://chenhao.in/LEVIR/), [WHU-CD](http://gpcv.whu.edu.cn/data/building_dataset.html), [CLCD](https://github.com/liumency/CropLand-CD), and [OSCD](https://rcdaudt.github.io/oscd/) datasets. (The preprocessed WHU-CD dataset can be downloaded from [here](https://www.dropbox.com/scl/fi/8gczkg78fh95yofq5bs7p/WHU.zip?rlkey=05bpczx0gdp99hl6o2xr1zvyj&dl=0))
+- Download the [LEVIR-CD](https://chenhao.in/LEVIR/), [WHU-CD](http://gpcv.whu.edu.cn/data/building_dataset.html), [CLCD](https://github.com/liumency/CropLand-CD), and [OSCD](https://rcdaudt.github.io/oscd/) datasets. (You can also download the processed WHU-CD dataset from [here](https://www.dropbox.com/scl/fi/8gczkg78fh95yofq5bs7p/WHU.zip?rlkey=05bpczx0gdp99hl6o2xr1zvyj&dl=0))
 
 - Crop each image in the dataset into 256x256 patches.
 
@@ -321,13 +321,19 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
 - Pre-trained models will come soon.
 
 ## Dependency
+```
 pip install -r requirements.txt
+```
 
 ## Training
+```
 python main.py --file_root LEVIR --max_steps 80000 --model_type small --batch_size 16 --lr 2e-4 --gpu_id 0
+```
 
 ## Inference
+```
 python eval.py --file_root LEVIR --max_steps 80000 --model_type small --batch_size 16 --lr 2e-4 --gpu_id 0
+```
 
 ## License
 ChangeViT is released under the [CC BY-NC-SA 4.0 license](LICENSE).

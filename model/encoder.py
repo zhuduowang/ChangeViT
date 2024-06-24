@@ -343,28 +343,40 @@ class Encoder(nn.Module):
             path = "path to vit-small preweights"
             
         else:
-            assert False, r'check the vit model type'
+            assert False, r'Encoder: check the vit model type'
 
         state_dict = torch.load(path, map_location='cpu')
 
         for k in ['pos_embed', 'patch_embed.proj.weight']:
             del state_dict[k]
-
         msg = self.vit.load_state_dict(state_dict, strict=False)
         print(' missing_keys:{},\n unexpected_keys:{}'.format(msg.missing_keys, msg.unexpected_keys))
-
-        self.detail_capture = resnet18(pretrained=True)
-
         print('model_type: {},\n checkpoint_path: {}'.format(model_type, path))
 
+        self.resnet = resnet18(pretrained=True)
+        self.drop = nn.Dropout(p=0.01)
+
+
+    def detail_capture(self, x):
+        x = self.resnet.conv1(x)
+        x = self.resnet.bn1(x)
+        x = self.resnet.relu(x)
+
+        x2 = self.drop(self.resnet.layer1(x))
+        x3 = self.resnet.layer2(x2)
+        x4 = self.resnet.layer3(x3)
+
+        return [x2, x3, x4]
+
+
     def forward(self, x, y):
-        g_x = self.vit(x)
-        g_y = self.vit(y)
+        v_x = self.vit(x)
+        v_y = self.vit(y)
 
-        g_x = rearrange(g_x, 'b (h w) c -> b c h w', h=16, w=16)
-        g_y = rearrange(g_y, 'b (h w) c -> b c h w', h=16, w=16)
+        v_x = rearrange(v_x, 'b (h w) c -> b c h w', h=16, w=16)
+        v_y = rearrange(v_y, 'b (h w) c -> b c h w', h=16, w=16)
 
-        l_x = self.detail_capture(x)
-        l_y = self.detail_capture(y)
+        c_x = self.detail_capture(x)
+        c_y = self.detail_capture(y)
 
-        return l_x + [g_x], l_y + [g_y]
+        return c_x + [v_x], c_y + [v_y]

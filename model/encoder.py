@@ -327,7 +327,7 @@ class Encoder(nn.Module):
                 block_fn=partial(Block, attn_class=MemEffAttention),
                 num_register_tokens=0
             )
-            path = "path to vit-tiny preweights"
+            path = "../checkpoint/deit_tiny_patch16_224-a1311bcf.pth"
 
         elif model_type == 'small':
             self.vit = DinoVisionTransformer(
@@ -340,12 +340,13 @@ class Encoder(nn.Module):
                 block_fn=partial(Block, attn_class=MemEffAttention),
                 num_register_tokens=0
             )
-            path = "path to vit-small preweights"
+            path = "../checkpoint/dinov2_vitb14_pretrain.pth"
             
         else:
             assert False, r'Encoder: check the vit model type'
 
-        state_dict = torch.load(path, map_location='cpu')
+        state_dict = torch.load(path, map_location='cpu')['model'] \
+            if model_type == 'tiny' else torch.load(path, map_location='cpu')
 
         for k in ['pos_embed', 'patch_embed.proj.weight']:
             del state_dict[k]

@@ -10,7 +10,7 @@ import torch.backends.cudnn as cudnn
 from torch.nn.parallel import gather
 import torch.optim.lr_scheduler
 
-import dataset as myDataLoader
+import dataset.dataset as myDataLoader
 import dataset.Transforms as myTransforms
 from model.metric_tool import ConfuseMatrixMeter
 from model.utils import BCEDiceLoss, init_seed, adjust_learning_rate
@@ -226,7 +226,7 @@ def trainValidateSegmentation(args):
     else:
         logger = open(logFileLoc, 'w')
         logger.write(
-            "\n%s\t%s\t%s\t%s\t%s\t%s" % ('Epoch', 'Kappa (val)', 'IoU (val)', 'F1 (val)', 'R (val)', 'P (val)', 'OA (val)'))
+            "\n%s\t%s\t%s\t%s\t%s\t%s\t%s" % ('Epoch', 'Kappa (val)', 'IoU (val)', 'F1 (val)', 'R (val)', 'P (val)', 'OA (val)'))
     logger.flush()
 
     optimizer = torch.optim.Adam(model.parameters(), args.lr, (0.9, 0.99), eps=1e-08, weight_decay=1e-4)
@@ -242,7 +242,7 @@ def trainValidateSegmentation(args):
         if epoch == 0:
             continue
 
-        lossVal, score_val = val(args, testLoader, model, epoch)  ## trick
+        lossVal, score_val = val(args, testLoader, model)
         torch.cuda.empty_cache()
         logger.write("\n%d\t\t%.4f\t\t%.4f\t\t%.4f\t\t%.4f\t\t%.4f\t\t%.4f" % (epoch, score_val['Kappa'], score_val['IoU'],
                                                                        score_val['F1'], score_val['recall'],
@@ -306,7 +306,6 @@ if __name__ == '__main__':
     parser.add_argument('--onGPU', default=True, type=lambda x: (str(x).lower() == 'true'),
                         help='Run on CPU or GPU. If TRUE, then GPU.')
     parser.add_argument('--gpu_id', default=0, type=int, help='GPU id number')
-    parser.add_argument('--weight', default='', type=str, help='pretrained weight, can be a non-strict copy')
 
     args = parser.parse_args()
     print('Called with args:')

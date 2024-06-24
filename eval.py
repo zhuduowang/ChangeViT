@@ -10,7 +10,7 @@ import torch.backends.cudnn as cudnn
 from torch.nn.parallel import gather
 import torch.optim.lr_scheduler
 
-import dataset as myDataLoader
+import dataset.dataset as myDataLoader
 import dataset.Transforms as myTransforms
 from model.metric_tool import ConfuseMatrixMeter
 from model.utils import BCEDiceLoss
@@ -153,6 +153,8 @@ if __name__ == '__main__':
     parser.add_argument('--num_workers', type=int, default=3, help='No. of parallel threads')
     parser.add_argument('--batch_size', type=int, default=1, help='Batch size')
     parser.add_argument('--model_type', type=str, default='small', help='select vit model type')
+    parser.add_argument('--lr', type=float, default=2e-4, help='Initial learning rate')
+    parser.add_argument('--savedir', default='./results', help='Directory to save the results')
     parser.add_argument('--logFile', default='testLog.txt',
                         help='File that stores the training and validation logs')
     parser.add_argument('--onGPU', default=True, type=lambda x: (str(x).lower() == 'true'),

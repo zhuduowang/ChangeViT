@@ -327,7 +327,7 @@ class Encoder(nn.Module):
                 block_fn=partial(Block, attn_class=MemEffAttention),
                 num_register_tokens=0
             )
-            path = "../checkpoint/deit_tiny_patch16_224-a1311bcf.pth"
+            path = "checkpoint/deit_tiny_patch16_224-a1311bcf.pth"
 
         elif model_type == 'small':
             self.vit = DinoVisionTransformer(
@@ -340,7 +340,7 @@ class Encoder(nn.Module):
                 block_fn=partial(Block, attn_class=MemEffAttention),
                 num_register_tokens=0
             )
-            path = "../checkpoint/dinov2_vitb14_pretrain.pth"
+            path = "checkpoint/dinov2_vits14_pretrain.pth"
             
         else:
             assert False, r'Encoder: check the vit model type'

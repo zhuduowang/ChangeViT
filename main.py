@@ -162,8 +162,11 @@ def trainValidateSegmentation(args):
     if args.onGPU:
         model = model.cuda()
 
-    mean = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
-    std = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+    # mean = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+    # std = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+
+    mean = [0.406, 0.456, 0.485, 0.406, 0.456, 0.485]
+    std = [0.225, 0.224, 0.229, 0.225, 0.224, 0.229]
 
     # compose the data with transforms
     trainDataset_main = myTransforms.Compose([

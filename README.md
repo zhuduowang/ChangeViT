@@ -298,7 +298,7 @@ Table 1. Performance comparison of different change detection methods on LEVIR-C
 
 - Crop each image in the dataset into 256x256 patches.
 
-- Prepare the dataset into the following structure and set its path in the [config](https://github.com/zhuduowang/ChangeViT/blob/5e08b4b2bdc94de282588562b85bb4bb6e0cd610/main.py#L146) file.
+- Prepare the dataset into the following structure. `train`, `val`, `test`, `A`/`t1`, `B`/`t2`, and `label` are matched case-insensitively. The label folder can also be named `labels`, `gt`, `mask`, or `masks`.
     ```
     ├─Train
         ├─A          jpg/png
@@ -329,9 +329,23 @@ pip install -r requirements.txt
 python main.py --file_root LEVIR --max_steps 80000 --model_type small --batch_size 16 --lr 2e-4 --gpu_id 0
 ```
 
+You can also pass any dataset root path directly:
+
+```
+python main.py --file_root /path/to/your/change_dataset --max_steps 80000 --model_type small --batch_size 16 --lr 2e-4 --gpu_id 0
+```
+
+Legacy aliases are still supported: `LEVIR`, `WHU`, `CLCD`, and `OSCD`.
+
 ## Inference
 ```
 python eval.py --file_root LEVIR --max_steps 80000 --model_type small --batch_size 16 --lr 2e-4 --gpu_id 0
+```
+
+For custom datasets, use the same root path that was used for training:
+
+```
+python eval.py --file_root /path/to/your/change_dataset --max_steps 80000 --model_type small --batch_size 16 --lr 2e-4 --gpu_id 0
 ```
 
 ## License

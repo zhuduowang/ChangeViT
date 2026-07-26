@@ -12,6 +12,7 @@ import torch.optim.lr_scheduler
 
 import dataset.dataset as myDataLoader
 import dataset.Transforms as myTransforms
+from dataset.paths import dataset_tag, resolve_dataset_root
 from model.metric_tool import ConfuseMatrixMeter
 from model.utils import BCEDiceLoss
 
@@ -83,18 +84,10 @@ def ValidateSegmentation(args):
 
     model = Trainer(args.model_type).float()
 
-    args.savedir = args.savedir + '_' + args.file_root + '_iter_' + str(args.max_steps) + '_lr_' + str(args.lr) + '/'
-
-    if args.file_root == 'LEVIR':
-         args.file_root = './levir_cd_256'
-    elif args.file_root == 'WHU':
-        args.file_root = './whu_cd_256'
-    elif args.file_root == 'CLCD':
-        args.file_root = './clcd_256'
-    elif args.file_root == 'OSCD':
-        args.file_root = 'oscd_256'
-    else:
-        raise TypeError('%s has not defined' % args.file_root)
+    data_tag = dataset_tag(args.file_root)
+    args.file_root = resolve_dataset_root(args.file_root)
+    args.savedir = args.savedir + '_' + data_tag + '_iter_' + str(args.max_steps) + '_lr_' + str(args.lr) + '/'
+    print("Using dataset root: {}".format(args.file_root))
 
     if not os.path.exists(args.savedir):
         os.makedirs(args.savedir)
@@ -146,7 +139,8 @@ def ValidateSegmentation(args):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('--file_root', default="LEVIR", help='Data directory | LEVIR | WHU | CLCD | OSCD ')
+    parser.add_argument('--file_root', default="LEVIR",
+                        help='Dataset root path, or legacy alias: LEVIR | WHU | CLCD | OSCD')
     parser.add_argument('--inWidth', type=int, default=256, help='Width of RGB image')
     parser.add_argument('--inHeight', type=int, default=256, help='Height of RGB image')
     parser.add_argument('--max_steps', type=int, default=80000, help='Max. number of iterations')
